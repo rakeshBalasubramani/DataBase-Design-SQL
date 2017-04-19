@@ -1,0 +1,83 @@
+<html>
+<head>
+</head>
+<script>
+
+function isValidDate(dateString)
+{
+    if(!/^\d{4}\-\d{2}\-\d{2}$/.test(dateString))
+        return false;
+	var parts = dateString.split("-");
+    var day = parseInt(parts[2], 10);
+    var month = parseInt(parts[1], 10);
+    var year = parseInt(parts[0], 10);
+	if(year < 1000 || year > 3000 || month <= 0 || month > 12)
+        return false;
+	var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+	if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+        monthLength[1] = 29;
+	return day > 0 && day <= monthLength[month -1];
+}
+function fun()
+{	
+	window.location.replace("library.html");
+}
+function bookreturn(x)
+{
+	var  y = x.split('.');
+	var isbn = y[0];
+	var card_id = y[1];
+	var today = new Date();
+	var p = confirm("Do you want to return this book with ISBN = "+isbn+" borrowed by card_id = "+card_id+" ?");
+	if(p == true)
+	{
+		var d = prompt("Enter the return date.","yyyy-mm-dd");
+		var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate()-1);
+		while((!isValidDate(d))||(Date.parse(d)<=Date.parse(date)))
+			d = prompt("Enter the return date.","yyyy-mm-dd");
+		x=x+'.'+d;
+		var xmlhttp="";
+		if (window.XMLHttpRequest)
+		{  
+				xmlhttp=new XMLHttpRequest();
+		}	 
+		else 
+		{
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+		}	
+		xmlhttp.onreadystatechange=function()
+		{
+			if (xmlhttp.readyState==4 && xmlhttp.status==200)
+			{
+				document.getElementById("searchresults").innerHTML=xmlhttp.responseText;   
+			}	  
+		}  
+		xmlhttp.open("GET","return1.php?isbn="+x,true);  
+		xmlhttp.send();
+	}
+}
+function returnbook(x)
+{
+	card_id=document.getElementById(x).value;
+	var xmlhttp="";
+	if (window.XMLHttpRequest)
+		xmlhttp=new XMLHttpRequest(); 
+	else 
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+	xmlhttp.onreadystatechange=function()
+	{
+		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+			document.getElementById("searchresults").innerHTML=xmlhttp.responseText;   
+				  
+	}  
+	xmlhttp.open("GET","return.php?card_id="+card_id,true);  
+	xmlhttp.send();
+}
+</script>
+<body>
+<div id="searchresults">
+<input type="text" id='s' name="card_id" size="50	" placeholder="Enter Card_ID or Book_ISBN or Borrower name" required>
+<button type="button" onclick="returnbook('s');">Get Books</button>
+</div>
+</body>
+</html>

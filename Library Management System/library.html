@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<script>
+function fun()
+{	
+	window.location.replace("library.html");
+}
+function borrow(x)
+{	
+	var i = x.split(",");
+	var j = i[i.length-1];
+	var flag = 0;
+	for(q=0;q<i.length-1;q++)
+		if(i[q]==j)
+			flag=1;
+	if(flag==0)
+	{
+		var y = "Do you want to check out this book with ISBN = "+j+" ?";
+		var p = confirm(y);
+		if(p == true)
+		{
+			var card_id = prompt("Please enter you card ID","0000");
+			var isbn = i[i.length-1]+" "+card_id;
+			var xmlhttp="";
+			if (window.XMLHttpRequest)
+			{  
+				xmlhttp=new XMLHttpRequest();
+			} 	
+			else 
+			{
+				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+			}		
+			xmlhttp.onreadystatechange=function()
+			{
+				if (xmlhttp.readyState==4 && xmlhttp.status==200)
+				{
+					document.getElementById("searchresults").innerHTML=xmlhttp.responseText;   
+				}		  
+			}  
+			xmlhttp.open("GET","borrower.php?isbn="+isbn,true);  
+			xmlhttp.send();
+		}
+	}
+	else
+		alert("Sorry this book currently is not available for checkout.")
+}
+function search(ex)
+{
+	keyword=document.getElementById(ex).value;
+	var xmlhttp="";
+	if (window.XMLHttpRequest)
+	{  
+		xmlhttp=new XMLHttpRequest();
+	} 
+	else 
+	{
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+	}
+	xmlhttp.onreadystatechange=function()
+	{
+		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			document.getElementById("searchresults").innerHTML=xmlhttp.responseText;   
+		}	  
+	}  
+   xmlhttp.open("GET","search.php?keyword="+keyword,true);  
+   xmlhttp.send();
+}
+</script>
+<style>
+.button {
+    display: block;
+    width: 115px;
+    height: 35px;
+    background: #4E9CAF;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+	position:absolute;
+    top:10px;
+    right:10px;
+}
+.button1 {
+    display: block;
+    width: 115px;
+    height: 35px;
+    background: BLUE;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+	position:absolute;
+    top:10px;
+    right:130px;
+}
+.button2 {
+    display: block;
+    width: 115px;
+    height: 35px;
+    background: RED;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+	position:absolute;
+    top:10px;
+    right:255px;
+}
+.search_form
+{
+	 text-align: center;
+	 position:absolute;
+     top:400px;
+     right:500px;
+}
+</style>
+<body>
+<div id="searchresults">
+	<img src="libimg.jpg" alt="Mountain View" style="width:100%;height:100%;">
+	<div class="search_form">
+	<input type="text" size="50" id="s" name="keyword" placeholder="Enter ISBN or title or name of the author to search" required>
+	<button type="button" class="btn btn-danger" onclick="search('s');">Search</button>
+	</div>
+	<a class="button" href="admin.html">Add Borrower</a>
+	<a class="button1" href="return.html">Return</a>
+	<a class="button2" href="fines.html">Fines</a>
+</div>
+</body>
+</html>
+
+

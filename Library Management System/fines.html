@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<script>
+function isValidDate(dateString)
+{
+    if(!/^\d{4}\-\d{2}\-\d{2}$/.test(dateString))
+        return false;
+	var parts = dateString.split("-");
+    var day = parseInt(parts[2], 10);
+    var month = parseInt(parts[1], 10);
+    var year = parseInt(parts[0], 10);
+	if(year < 1000 || year > 3000 || month <= 0 || month > 12)
+        return false;
+	var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+	if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+        monthLength[1] = 29;
+	return day > 0 && day <= monthLength[month -1];
+}
+function fun()
+{	
+	window.location.replace("library.html");
+}
+function pay(x,y,z)
+{
+	var p = confirm("Do you want to pay the fine of "+y+"$ for the Card ID "+x+" ?");
+	if(p==true)
+	{
+		var xmlhttp="";
+		if (window.XMLHttpRequest)
+		{  
+			xmlhttp=new XMLHttpRequest();
+		} 
+		else 
+		{
+			xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+		}	
+		xmlhttp.onreadystatechange=function()
+		{
+			if (xmlhttp.readyState==4 && xmlhttp.status==200)
+			{
+				document.getElementById("search_form").innerHTML=xmlhttp.responseText;   
+			}	  
+		}  
+		xmlhttp.open("GET","fines2.php?loan_id="+z,true);  
+		xmlhttp.send();
+	}
+}
+function search(ex)
+{
+	card_id=document.getElementById(ex).value;
+	var xmlhttp="";
+	if (window.XMLHttpRequest)
+	{  
+		xmlhttp=new XMLHttpRequest();
+	} 
+	else 
+	{
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+	}
+	xmlhttp.onreadystatechange=function()
+	{
+		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			document.getElementById("search_form").innerHTML=xmlhttp.responseText;   
+		}	  
+	}  
+   xmlhttp.open("GET","fines.php?card_id="+card_id,true);  
+   xmlhttp.send();
+}
+function update()
+{
+	var today = new Date();
+	var d = prompt("Enter the return date.","yyyy-mm-dd");
+	var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate()-1);
+	while((!isValidDate(d))||(Date.parse(d)<=Date.parse(date)))
+			d = prompt("Enter the return date.","yyyy-mm-dd");
+	var xmlhttp="";
+	if (window.XMLHttpRequest)
+	{  
+		xmlhttp=new XMLHttpRequest();
+	} 
+	else 
+	{
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+	}
+	xmlhttp.onreadystatechange=function()
+	{
+		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+		{
+			document.getElementById("search_form").innerHTML=xmlhttp.responseText;   
+		}	  
+	}  
+   xmlhttp.open("GET","fines1.php?card_id="+d,true);  
+   xmlhttp.send();
+}
+</script>
+<style>
+.button {
+    display: block;
+    width: 115px;
+    height: 35px;
+    background: #4E9CAF;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+	position:absolute;
+    top:10px;
+    right:10px;
+}
+.button1 {
+    display: block;
+    width: 115px;
+    height: 35px;
+    background: BLUE;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+	position:absolute;
+    top:10px;
+    right:130px;
+}
+.button2 {
+    display: block;
+    width: 115px;
+    height: 35px;
+    background: RED;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+	position:absolute;
+    top:10px;
+    right:255px;
+}
+.search_form
+{
+	 text-align: center;
+	 position:absolute;
+     top:400px;
+     right:500px;
+}
+</style>
+<body>
+<div id="search_form">
+	<input type="text" size="30" id="s" name="keyword" placeholder="Enter Card ID" required>
+	<button type="button" class="btn btn-danger" onclick="search('s');">Get Fines</button>
+	<br><br>
+	<button type="button" class="btn btn-danger" onclick="update();">Update Fines</button>
+</div>
+</body>
+</html>
+
+
