@@ -4,7 +4,7 @@ Project1:
       Constructed an interactive web interface through which the librarian can search, Check-in/Out books. 
       It can also manage the fines levied on books. New borrowers can be added to the system. 
       A system with over 25000 books can be searched for given the title or author or even the ISBN.
-Project2:
+Project2b:
   Database Files and Indexing:
       The goal of this project was to implement a rudimentary database engine that is loosely based on a hybrid between MySQL and SQLite. 
       This database supported actions on a single table at a time, no joins or nested queries.
